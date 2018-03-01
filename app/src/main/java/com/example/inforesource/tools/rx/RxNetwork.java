@@ -28,4 +28,10 @@ public class RxNetwork {
 
     }
 
+    public static Observable<List<News>> getSearchList(String q){
+        return apiService.getSearchResponse(API_SOURCES, q, API_KEY)
+                .map(Mappers::mapNewsList)
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
 }

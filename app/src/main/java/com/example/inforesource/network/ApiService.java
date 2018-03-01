@@ -21,6 +21,9 @@ public interface ApiService {
     @GET("everything")
     Observable<Response> getResponse(@Query("sources") String s, @Query("page") Integer p, @Query("pagesize") Integer ps, @Query("apiKey") String ak);
 
+    @GET("everything")
+    Observable<Response> getSearchResponse(@Query("sources") String s, @Query("q") String q,@Query("apiKey") String ak);
+
     Retrofit retrofit = new Retrofit.Builder()
             .baseUrl(API_URL)
             .addCallAdapterFactory(RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io()))

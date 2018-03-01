@@ -1,14 +1,11 @@
 package com.example.inforesource.data.repository;
 
 import android.util.Log;
-
 import com.example.inforesource.data.News;
-import com.example.inforesource.presentation.contracts.ContractNewsList;
 import com.example.inforesource.tools.rx.RxNetwork;
-
 import java.util.List;
+import io.reactivex.Observable;
 
-import io.reactivex.disposables.Disposable;
 
 /**
  * @author Libgo on 27.02.2018.
@@ -16,35 +13,25 @@ import io.reactivex.disposables.Disposable;
 
 public class AppRepository {
 
-    private Disposable disposable;
+
     private Integer page = 1;
-    private List<News> dataList;
-    private ContractNewsList.PresenterBase presenterBase;
 
 
-    public void initPresenter(ContractNewsList.PresenterBase presenterBase){
-        this.presenterBase = presenterBase;
-
+    public Observable<List<News>> download() {
+        page = page +1;
+        Log.d("PAGE", page.toString());
+        return RxNetwork.getNewsList(page);
     }
 
-    public void getDataList(){
-        disposable = RxNetwork.getNewsList(page)
-                .subscribe(this::logs, throwable -> error());
+    public Observable<List<News>> searchDowload(String q){
+        return RxNetwork.getSearchList(q);
     }
 
-    private void error() {
+    public void setPage(Integer page) {
+        this.page = page;
     }
 
-    private void logs(List<News> list) {
-        page = page + 1;
-        for (News news:list){
-            Log.d("NEWS", news.getTitle());
-        }
-        presenterBase.startShow(list);
-        presenterBase.loadMore();
-
-
+    public Integer getPage() {
+        return page;
     }
-
-
 }

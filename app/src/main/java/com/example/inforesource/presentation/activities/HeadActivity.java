@@ -2,11 +2,9 @@ package com.example.inforesource.presentation.activities;
 
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-
 import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.example.inforesource.R;
 import com.example.inforesource.presentation.fragments.HeadFragment;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 

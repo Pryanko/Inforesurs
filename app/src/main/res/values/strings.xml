@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">Inforesurs</string>
     <string name="app_title_name">Inforesurs</string>
+    <string name="load">ЕЩЕ НОВОСТИ</string>
+    <string name="hint_search">Поиск…</string>
+    <string name="Read_more">Читать далее…</string>
+    <string name="not_network">Нет подключения к сети…</string>
+    <string name="repeat">ПОВТОРИТЬ</string>
 </resources>
