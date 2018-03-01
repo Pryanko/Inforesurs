@@ -28,12 +28,8 @@ public final class SearchViewQueryTextChanges implements ObservableSource<String
          this.searchView = view;
     }
 
-
-
     @Override
     public void subscribe(Observer<? super String> observer) {
-
-
 
         SearchView.OnQueryTextListener watcher = new SearchView.OnQueryTextListener() {
             @Override
