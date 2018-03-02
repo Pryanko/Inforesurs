@@ -16,7 +16,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebView;
 import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.example.inforesource.R;
@@ -38,7 +37,7 @@ import io.reactivex.disposables.Disposable;
  */
 
 public class HeadFragment extends MvpAppCompatFragment implements ContractNewsList.View,
-        ContractNewsList.ClickItemAdapter {
+        ContractNewsList.ClickItemAdapter, View.OnAttachStateChangeListener {
 
     @BindView(R.id.swipe_refresh)
     SwipeRefreshLayout swipeRefresh;
@@ -94,7 +93,7 @@ public class HeadFragment extends MvpAppCompatFragment implements ContractNewsLi
         buttonLoad.setShadowEnabled(false);
         buttonLoad.setCornerRadius(4);
         buttonLoad.setOnClickListener(v -> {
-            presenterNews.refresh();
+            presenterNews.refresh(false, false);
             buttonLoad
                     .setVisibility(View.GONE);
         });
@@ -106,7 +105,7 @@ public class HeadFragment extends MvpAppCompatFragment implements ContractNewsLi
         inflater.inflate(R.menu.menu_search, menu);
 
         searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
-
+        searchView.addOnAttachStateChangeListener(this);
         disposable = RxViews.queryTextChanges(searchView, 600)
                 .subscribe(presenterNews::search);
 
@@ -121,8 +120,12 @@ public class HeadFragment extends MvpAppCompatFragment implements ContractNewsLi
     }
 
     @Override
-    public void setNewsItems(List<News> list) {
-        newsAdapter.addList(list);
+    public void setNewsItems(List<News> list, boolean postSearch, boolean scrollTop) {
+        newsAdapter.addList(list, postSearch);
+        if(scrollTop){
+            linearLayoutManager.scrollToPosition(0);
+        }
+
 
     }
 
@@ -130,6 +133,7 @@ public class HeadFragment extends MvpAppCompatFragment implements ContractNewsLi
     public void updateNewsItems(List<News> list) {
         newsAdapter.updateList(list);
         searchView.clearFocus();
+        linearLayoutManager.scrollToPosition(0);
     }
 
     @Override
@@ -142,8 +146,8 @@ public class HeadFragment extends MvpAppCompatFragment implements ContractNewsLi
         Log.e("NetworkError", throwable.toString());
         Snackbar.make(swipeRefresh, R.string.not_network, Snackbar.LENGTH_INDEFINITE)
                 .setAction(R.string.repeat, v ->
-                {presenterNews.refresh();
-                 presenterNews.setNumberPage();}
+                {presenterNews.refresh(false, false);
+                 presenterNews.resetNumberPage();}
                 ).show();
 
     }
@@ -153,16 +157,36 @@ public class HeadFragment extends MvpAppCompatFragment implements ContractNewsLi
         if (isOnListener) {
             recyclerView.addOnScrollListener(newsScrollListener);
         } else {
-            recyclerView.removeOnScrollListener(newsScrollListener);
+            recyclerView.clearOnScrollListeners();
         }
     }
 
     @Override
     public void readMore(String s) {
+        /*
+        WebFragment webFragment = new WebFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString(API_OK, s);
+        webFragment.setArguments(bundle);
+        if(getFragmentManager().beginTransaction() != null) {
+            getFragmentManager().beginTransaction().addToBackStack(API_OK)
+                    .replace(R.id.fragment_container, webFragment)
+                    .commit();
+        }  */
         Intent i = new Intent(Intent.ACTION_VIEW);
         i.setData(Uri.parse(s));
         startActivity(i);
 
+    }
+
+    @Override
+    public void onViewAttachedToWindow(View v) {
+
+    }
+
+    @Override
+    public void onViewDetachedFromWindow(View v) {
+              presenterNews.refresh(true, true);
     }
 
     @Override
@@ -175,6 +199,7 @@ public class HeadFragment extends MvpAppCompatFragment implements ContractNewsLi
     }
 
 
-    }
+
+}
 
 

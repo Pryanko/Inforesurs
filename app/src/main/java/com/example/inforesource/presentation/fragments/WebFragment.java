@@ -2,6 +2,7 @@ package com.example.inforesource.presentation.fragments;
 
 import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -66,7 +67,9 @@ public class WebFragment extends MvpAppCompatFragment {
 
     @SuppressLint("SetJavaScriptEnabled")
     private void startWebShow(String s){
-        Log.d("WEB", s);
+        Log.d("WEB", String.valueOf(Uri.parse(s)));
+        //Получаемые линки - не парсятся webView
+        webView.loadUrl( /* s */ "https://stackoverflow.com/questions/31159149/using-webview-in-fragment/31159185#31159185");
         webView.setWebViewClient( new NewsWebClient());
         webView.setWebChromeClient( new WebChromeClient());
         webView.getSettings().setJavaScriptEnabled(true);
@@ -77,7 +80,7 @@ public class WebFragment extends MvpAppCompatFragment {
         webView.getSettings().setPluginState(WebSettings.PluginState.ON);
         webView.getSettings().setAllowFileAccess(true);
         //webView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
-        webView.loadUrl(s);
+
 
         
     }

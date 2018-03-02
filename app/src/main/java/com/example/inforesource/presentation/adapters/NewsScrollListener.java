@@ -23,7 +23,6 @@ public class NewsScrollListener extends RecyclerView.OnScrollListener {
             this.buttonLoad = buttonLoad;
 
     }
-    
 
     @Override
     public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
@@ -47,7 +46,6 @@ public class NewsScrollListener extends RecyclerView.OnScrollListener {
                     super.onAnimationEnd(animation);
                 }
             });
-
         }
         else {
             buttonLoad.animate().translationY(buttonLoad.getHeight()).alpha(0.0f).setDuration(450)

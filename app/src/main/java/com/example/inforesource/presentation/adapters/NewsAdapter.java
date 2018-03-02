@@ -24,22 +24,30 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder>{
     private List<News> dataList = new ArrayList<>();
     private ContractNewsList.ClickItemAdapter clickItemAdapter;
 
-    public void addList(List<News> list){
-        if(list != null) {
-            dataList.addAll(list);
-            notifyDataSetChanged();
+    public void addList(List<News> list, boolean postSearch){
+            if (postSearch) {
+                if (list != null) {
+                    updateList(list);
+                }
+            } else {
+                if (list != null) {
+                    dataList.addAll(list);
+                    notifyDataSetChanged();
+                }
+            }
         }
-    }
+
 
     public void updateList(List<News> list){
         if(list != null){
             dataList.clear();
             dataList.addAll(list);
             notifyDataSetChanged();
+
         }
 
     }
-    
+
     @Override
     public NewsAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         return new ViewHolder(LayoutInflater.from(parent.getContext())
@@ -67,6 +75,10 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder>{
 
     public void initClickItem(ContractNewsList.ClickItemAdapter clickItemAdapter) {
         this.clickItemAdapter = clickItemAdapter;
+    }
+
+    private List<News> getDataList() {
+        return dataList;
     }
 
     class ViewHolder extends RecyclerView.ViewHolder{

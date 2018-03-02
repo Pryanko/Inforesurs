@@ -21,14 +21,15 @@ public class PresenterNews extends MvpPresenter<ContractNewsList.View>
 
     @Override
     protected void onFirstViewAttach() {
-        refresh();
+        refresh(false, false);
     }
+
     @Override
-    public void refresh(){
+    public void refresh(boolean postSearch, boolean scrollTop){
 
         getViewState().loadingStateChanged(true);
-        compositeDisposable.add(appRepository.download()
-                .subscribe(this::startShow, this::handleError));
+        compositeDisposable.add(appRepository.download(postSearch)
+                .subscribe(list -> this.startShow(list, postSearch, scrollTop), this::handleError));
     }
 
     private void handleError(Throwable throwable) {
@@ -37,8 +38,8 @@ public class PresenterNews extends MvpPresenter<ContractNewsList.View>
     }
 
     @Override
-    public void startShow(List<News> list){
-        getViewState().setNewsItems(list);
+    public void startShow(List<News> list, boolean postSearch, boolean scrollTop){
+        getViewState().setNewsItems(list, postSearch, scrollTop);
         getViewState().loadingStateChanged(false);
         getViewState().isRecyclerListener(true);
         getViewState().isCheckedButtonVisible();
@@ -61,8 +62,8 @@ public class PresenterNews extends MvpPresenter<ContractNewsList.View>
                 .subscribe(this::searchShow, this::handleError));
     }
 
-    public void setNumberPage(){
-        appRepository.setPage(1);
+    public void resetNumberPage(){
+        appRepository.resetNumberPage();
     }
 
     @Override
